@@ -14,4 +14,5 @@
 
 (defn -main
   [& args]
+  (info "port is " (env :port))
   (s/run h/app {:port (or (env :port) 8080)}))
