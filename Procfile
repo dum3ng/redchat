@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/redchat-standalone.jar clojure.main -m redchat.core
+web: java $JVM_OPTS -cp target/uberjar/redchat-standalone.jar clojure.main -m redchat.core

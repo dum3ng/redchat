@@ -15,4 +15,4 @@
   :target-path "target/%s"
   :uberjar-name "redchat-standalone.jar"
   :profiles {:dev {:src-paths ["src" "profiles/dev"]}
-             :uberjar {:aot :all}})
+             :uberjar {:main redchat.core :aot :all}})
