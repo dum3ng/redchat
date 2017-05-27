@@ -13,7 +13,7 @@
   (s/run-dmc h/app))
 
 (defn -main
-  [& args]
+  [& [port]]
   (info "port is " (env :port))
   (let [port (Integer. (or port (env :port) 5000))]
     (s/run h/app {:port port})))
