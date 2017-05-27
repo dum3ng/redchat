@@ -13,7 +13,9 @@
   (s/run-dmc h/app))
 
 (defn -main
-  [& [port]]
-  (info "port is " (env :port))
-  (let [port (Integer. (or port (env :port) 5000))]
-    (s/run h/heroku {:port port})))
+  [& {:as args}]
+  ;;  (info "port is " (env :port))
+  (let [host (args "host")
+        port (Integer. (or (args "port") (env :port) 5000))]
+    (s/run h/heroku {:port port
+                     :host host})))
