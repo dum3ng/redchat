@@ -15,4 +15,5 @@
 (defn -main
   [& args]
   (info "port is " (env :port))
-  (s/run h/app {:port (or (env :port) 8080)}))
+  (let [port (Integer. (or port (env :port) 5000))]
+    (s/run h/app {:port port})))

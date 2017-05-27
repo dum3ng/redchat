@@ -11,9 +11,10 @@
                  [compojure "1.6.0"]
                  [com.taoensso/timbre "4.10.0"]
                  [environ "1.1.0"]]
-
+  :plugins [[environ/environ.lein "0.3.1"]]
   :main ^:skip-aot redchat.core
   :target-path "target/%s"
   :uberjar-name "redchat-standalone.jar"
   :profiles {:dev {:src-paths ["src" "profiles/dev"]}
+             :production {:env {:production true}}
              :uberjar {:main redchat.core :aot :all}})
