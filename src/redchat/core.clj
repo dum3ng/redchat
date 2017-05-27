@@ -4,6 +4,7 @@
             [clojure.data.json :as json]
             [redchat.handlers :as h]
             [taoensso.timbre :refer [info error]]
+            [environ.core :refer [env]]
             )
   (:gen-class))
 
@@ -13,4 +14,4 @@
 
 (defn -main
   [& args]
-  (s/run h/app))
+  (s/run h/app {:port (or (env :port) 8080)}))

@@ -9,7 +9,8 @@
                  [ring "1.6.1"]
                  [org.immutant/web "2.1.7"]
                  [compojure "1.6.0"]
-                 [com.taoensso/timbre "4.10.0"]]
+                 [com.taoensso/timbre "4.10.0"]
+                 [environ "1.1.0"]]
 
   :main ^:skip-aot redchat.core
   :target-path "target/%s"
