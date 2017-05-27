@@ -17,5 +17,5 @@
   ;;  (info "port is " (env :port))
   (let [host (args "host")
         port (Integer. (or (args "port") (env :port) 5000))]
-    (s/run h/heroku {:port port
-                     :host host})))
+    (s/run h/app {:port port
+                  :host host})))
