@@ -2,17 +2,22 @@ html, body{
     margin: 0;
     padding: 0;
 }
+body {
+    background-image: url('/img/universe.jpg');
+    background-size: cover;
+}
 div {
     box-sizing: border-box;
 }
 .primary{
-    background-color: #FF3501;
+    background-color: #d2657e;
 }
 .secondary {
     background-color: #488AFF;
 }
 .toast-container{
-    position: absolute;
+    z-index: 10;
+    position: fixed;
     top: 10px;
     width: 100%;
     left: 50%;
@@ -38,7 +43,7 @@ div {
     text-align: center;
 }
 .full {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
@@ -46,6 +51,7 @@ div {
 }
 .modal {
     min-height: 500px;
+    z-index: 2;
 }
 .modal-back {
     background-color: gray;
@@ -68,12 +74,10 @@ div {
     width: 80%;
     height: 32px;
 }
-.name-commit {
+.button {
+    margin: 10px;
     cursor: pointer;
     border: none;
-    position: absolute;
-    bottom: 10px;
-    right: 20px;
     text-align: center;
     padding: 10px 20px;
     font-size: 16px;
@@ -81,12 +85,20 @@ div {
     border-radius: 5px;
     box-shadow: gray 0 0 5px 0;
 }
+.name-commit {
+
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+
+}
 .hidden {
     display: none;
 }
 
 /* ---main--- */
 .header{
+    z-index: 1;
     width: 100%;
     height: 60px;
     position: relative;
@@ -107,6 +119,136 @@ div {
     font-size: 32px;
 }
 .container {
+    background: #544e67;
     width: 100%;
-    padding-top: 50px;
+    margin: auto;
+    padding-top: 30px;
+
+}
+@media screen and (min-width: 480px) {
+    .container{
+        width: 60%;
+        min-width: 480px;
+    }
+}
+.row {
+    padding: 10px 20px;
+}
+.messages {
+    width: 100%;
+    height: 320px;
+    margin-top: 20px;
+    overflow-y: auto;
+    background-image: url('/img/ma.jpg');
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.big-input{
+    font-size: 26px;
+    width: 80%;
+    height: 36px;
+    padding: 10px;
+    margin-top: 20px;
+}
+.send{
+    height: 60px;
+    position: relative;
+}
+.send:after{
+    content:'';
+    opacity: 0;
+
+}
+.send:hover:after{
+    content: 'press Meta+Enter to send!';
+    opacity: 1;
+    transition: opacity 0s linear 1s;
+    position: absolute;
+    background-color: #222;
+    color: white;
+    padding: 15px;
+    white-space: nowrap;
+    top: -50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.receiver-input{
+    background-color: transparent;
+    padding: 0 20px;
+    outline: none;
+    border: none;
+    font-size: 26px;
+    font-style: italic;
+    border-bottom: solid 1px gray;
+}
+
+input[name="message"] {
+
+}
+/*----- chat ----- */
+.chat {
+    display: flex;
+    padding: 10px 20px;
+    flex-direction: row;
+    color: white;
+}
+
+.chat-other {
+    justify-content: flex-start;
+}
+.chat-self {
+    justify-content: flex-end;
+}
+
+.chat-item {
+    min-width: 100px;
+    max-width: 200px;
+}
+.chat-title{
+
+}
+.bubble {
+
+    overflow-wrap: break-word;
+    padding: 15px;
+    border: 10px;
+    position: relative;
+    border-radius: 5px;
+}
+
+.bubble-other {
+    z-index: 10;
+    background-color:#424146;
+}
+.bubble-other:after{
+    position:absolute;
+    content:'';
+    left: 20px;
+    bottom: -15px;
+    border-top: 15px solid #424146;
+    width:0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 20px solid transparent;
+
+}
+.bubble-self {
+    z-index: 10;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #d2657e;
+}
+.bubble-self:after{
+    z-index: 1;
+    position:absolute;
+    content:'';
+    right: 20px;
+    bottom: -15px;
+    border-top: 15px solid #d2657e;/* #009929;*/
+    width:0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 5px solid transparent;
+
+
 }

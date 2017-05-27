@@ -57,7 +57,7 @@
       #_ (error (format "user %s not onlin." to))
       (async/send! (@channels from)
                    (json/write-str {:type "error"
-                                    :data {:message (format "user %s not onlin." to)}}
+                                    :data {:message (format "user %s now NOT online." to)}}
                                    :key-fn name))))
   )
 

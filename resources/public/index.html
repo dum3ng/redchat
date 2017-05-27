@@ -4,13 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Document</title>
     <link href="/css/main.css" rel="stylesheet"/>
-    <style>
-      .messages {
-          border: solid red 1px;
-          width: 600px;
-          width: 800px;
-      }
-    </style>
+ 
   </head>
   <body>
       <!-- modal -->
@@ -19,7 +13,7 @@
           <div class="pop-over">
               <h2>Enter your name:</h2>
               <input class="username" name="username" type="text" value=""/>
-              <button class="name-commit secondary">Enter</button>
+              <button class="button name-commit secondary">Enter</button>
           </div>
       </div>
       <!-- toast container -->
@@ -30,15 +24,22 @@
           <div class="name-display"></div>
       </div>
       <div class="container">
-          <div><b>TO:</b></div>
-          <input name="to" type="text" value=""/>
-          <p><b>message:</b></p>
-          <input name="message" type="text" value=""/>
-          <br/>
-          <button id="send">send</button>
+          <div class="row">
+              <span ><b>TO:</b></span>
+              <input class="receiver-input" name="to" type="text" value=""/>
+          </div>
+
+
+
           <div class="messages">
 
           </div>
+
+          <div class="row">
+              <input class="big-input" name="message" type="text" value=""/>
+              <button id="send" class="button secondary send">send</button>
+          </div>
+
       </div>
 
       <script src="/js/main.js"></script>

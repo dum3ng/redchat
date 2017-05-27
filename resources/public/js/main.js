@@ -58,7 +58,7 @@ function send(m) {
 }
 // -------------Modal------------
 var modal = $('.modal');
-var nameEle = $('input[name="username"]');
+var nameEle = $('.username');
 var nameCommit = $('.name-commit');
 var nameDisplay = $('.name-display');
 nameEle.focus();
@@ -70,6 +70,8 @@ function join(name) {
               payload: {username: name}}) ;
 };
 
+var toEle = $('input[name="to"]');
+var msgEle = $('input[name="message"]');
 nameCommit.on('click', (e) => {
   username = nameEle.value.trim();
   if(!username){
@@ -79,31 +81,50 @@ nameCommit.on('click', (e) => {
   }
   modal.classList.add('hidden');
   join(username);
+  toEle.focus();
+});
+toEle.on('keydown', (e) => {
+  if(e.key === 'Enter') {
+    msgEle.focus();
+  }
 });
 // ------------------------------
 var sendButton = $('#send');
-var toEle = $('input[name="to"]');
-var msgEle = $('input[name="message"]');
 var msgContainer = $('.messages');
 
 function addMessage(json) {
   var ele = document.createElement('div');
   var c = '';
-  if(json.type === 'error'){
-    c = c + '<b>' + json.type +'</b>: ' +json.data.message;
-  }else if(json.type==='chat') {
-    c = c + '<i>from <b>' + json.data.from + '</b></i>:' +
-      json.data.message;
-  } else {
-    c = c + '<b>' + json.type +'</b>: ' +json.data;
+  switch(json.type){
+  case 'error':
+    c =  '<b>' + json.type +'</b>: ' +json.data.message;
+    break;
+  case 'chat':  // from other
+    c =  '<div class="chat chat-other"><div class="chat-item">'+
+      '<div class="chat-title">'+ json.data.from+
+      '</div><div class="bubble bubble-other">' + json.data.message+
+    '</div></div></div>';
+
+    break;
+  case 'me':
+        c =  '<div class="chat chat-self"><div class="chat-item">'+
+      '<div class="chat-title">'+ 'Me'+
+      '</div><div class="bubble bubble-self">' + json.data+
+    '</div></div></div>';
+
+    break;
   }
+
   ele.innerHTML = c;
   msgContainer.appendChild(ele);
+  var bottom = msgContainer.scrollHeight-msgContainer.scrollTop;
+  if(bottom !== msgContainer.clientHeight) {
+    msgContainer.scrollTop = msgContainer.scrollHeight - msgContainer.clientHeight;
+  }
 }
 
-sendButton.on('click', (e) => {
-
-  var toName = toEle.value.trim();
+function submit(){
+   var toName = toEle.value.trim();
   var msg = msgEle.value;
   if(toName==='') {
     var toast = ToastController.toast({message: 'receiver\'s name can not be empty!'});
@@ -115,7 +136,16 @@ sendButton.on('click', (e) => {
   msgEle.value = '';
   msgEle.focus();
   addMessage({type:'me', data: msg});
+}
 
+msgEle.on('keydown', (e) => {
+  if(e.metaKey && e.key==='Enter') {
+    submit();
+  }
+});
+
+sendButton.on('click', (e) => {
+  submit();
 });
 
 
