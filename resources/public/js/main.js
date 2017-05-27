@@ -31,9 +31,12 @@ var createConn = () => {
     console.log('client: ws connected.');
   };
   ws.onmessage = (e) => {
-
     var json = JSON.parse(e.data);
-    console.log(json);
+    if(json.type === 'join'){
+      var toast = ToastController.toast({message: json.data.message});
+      toast.present();
+      return;
+    }
     addMessage(json);
 
   };
@@ -98,7 +101,7 @@ function addMessage(json) {
   var c = '';
   switch(json.type){
   case 'error':
-    c =  '<b>' + json.type +'</b>: ' +json.data.message;
+    c = '<b>' + json.type +'</b>: ' +json.data.message;
     break;
   case 'chat':  // from other
     c =  '<div class="chat chat-other"><div class="chat-item">'+
@@ -113,6 +116,9 @@ function addMessage(json) {
       '</div><div class="bubble bubble-self">' + json.data+
     '</div></div></div>';
 
+    break;
+  default:
+    c='unknown data format.';
     break;
   }
 
