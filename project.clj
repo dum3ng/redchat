@@ -12,4 +12,5 @@
 
   :main ^:skip-aot redchat.core
   :target-path "target/%s"
+  :uberjar-name "redchat-standalone.jar"
   :profiles {:uberjar {:aot :all}})
