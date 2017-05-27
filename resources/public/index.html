@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8"/>
     <title>Document</title>
+    <link href="/css/main.css" rel="stylesheet"/>
     <style>
       .messages {
           border: solid red 1px;
@@ -12,17 +13,34 @@
     </style>
   </head>
   <body>
-    <span>name</span>
-    <input name="username" type="text" value="" placeholder="enter your name"/>
-    <button id="join">join</button>
-    <span><b>TO:</b></span>
-    <input name="to" type="text" value=""/>
-    <span><b>message:</b></span>
-    <input name="message" type="text" value=""/>
-    <button id="send">send</button>
-    <div class="messages">
-      
-    </div>
-    <script src="/js/main.js"></script>
+      <!-- modal -->
+      <div class="full modal">
+          <div class="full modal-back"></div>
+          <div class="pop-over">
+              <h2>Enter your name:</h2>
+              <input class="username" name="username" type="text" value=""/>
+              <button class="name-commit secondary">Enter</button>
+          </div>
+      </div>
+      <!-- toast container -->
+      <div class="toast-container"></div>
+      <!-- main  -->
+      <div class="header primary">
+          <img alt="" src="/img/logo.svg"/>
+          <div class="name-display"></div>
+      </div>
+      <div class="container">
+          <div><b>TO:</b></div>
+          <input name="to" type="text" value=""/>
+          <p><b>message:</b></p>
+          <input name="message" type="text" value=""/>
+          <br/>
+          <button id="send">send</button>
+          <div class="messages">
+
+          </div>
+      </div>
+
+      <script src="/js/main.js"></script>
   </body>
 </html>

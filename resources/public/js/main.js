@@ -1,31 +1,31 @@
 var $ = (q) => document.querySelector(q);
+HTMLElement.prototype.on = HTMLElement.prototype.addEventListener;
 
-var sendButton = $('#send');
-var joinButton = $('#join');
-var nameEle = $('input[name="username"]');
-var toEle = $('input[name="to"]');
-var msgEle = $('input[name="message"]');
-
-var msgContainer = $('.messages');
-
-function addMessage(json) {
+var username;
+//-------------ToastController----------------
+var ToastController = {};
+var container = $('.toast-container');
+ToastController.toast = (msg)=>{
   var ele = document.createElement('div');
-  var c = '';
-  if(json.type === 'error'){
-    c = c + '<b>' + json.type +'</b>: ' +json.data.message;
-  }else if(json.type==='chat') {
-    c = c + '<i>from <b>' + json.data.from + '</b></i>:' +
-      json.data.message;
-  } else {
-    c = c + '<b>' + json.type +'</b>: ' +json.data;
-  }
-  ele.innerHTML = c;
-  msgContainer.appendChild(ele);
-}
+  ele.classList.add('toast');
+  ele.innerText = msg.message;
+  var Toast = {};
+  Toast.element = ele;
+  Toast.present = function(){
+    container.prepend(ele);
+    setTimeout(()=>{
+       container.removeChild(ele);
+    }, msg.duration || 2000);
+  };
 
+  return Toast;
+};
+
+// ---------- WebSocket ----------
 var ws;
 var createConn = () => {
-  ws = new WebSocket('ws://localhost:8080/ws');
+  var url = 'ws://' + window.location.host + '/ws';
+  ws = new WebSocket(url);
   ws.onopen = () => {
     console.log('client: ws connected.');
   };
@@ -43,36 +43,77 @@ var checkConn = () => {
     return 0;
   if(ws.readyState === ws.OPEN)
     return 1;
-  // create a new connection
+  // closing or closed, create a new connection
   createConn();
   return 0;
 };
 
-var join = () => {
-  var name = nameEle.value.trim();
-  ws.send(JSON.stringify({type: 'join',
-                          payload: {username: name}})) ;
+function send(m) {
+  if(!checkConn()) {
+    var toast = ToastController.toast({message: 'Connection not ready. Wait awhile and retry.'});
+    toast.present();
+    return;
+  }
+  ws.send(JSON.stringify(m));
+}
+// -------------Modal------------
+var modal = $('.modal');
+var nameEle = $('input[name="username"]');
+var nameCommit = $('.name-commit');
+var nameDisplay = $('.name-display');
+nameEle.focus();
+
+
+function join(name) {
+  nameDisplay.innerText = name;
+  send({type: 'join',
+              payload: {username: name}}) ;
 };
 
-joinButton.addEventListener('click', (e) => {
-  join();
+nameCommit.on('click', (e) => {
+  username = nameEle.value.trim();
+  if(!username){
+    var toast = ToastController.toast({message: 'Username can not be empty!'});
+    toast.present();
+    return;
+  }
+  modal.classList.add('hidden');
+  join(username);
 });
+// ------------------------------
+var sendButton = $('#send');
+var toEle = $('input[name="to"]');
+var msgEle = $('input[name="message"]');
+var msgContainer = $('.messages');
 
-sendButton.addEventListener('click', (e) => {
-  if(!checkConn) {
-    addMessage({type:'client', data: 'socket not ready..'});
-    return;
+function addMessage(json) {
+  var ele = document.createElement('div');
+  var c = '';
+  if(json.type === 'error'){
+    c = c + '<b>' + json.type +'</b>: ' +json.data.message;
+  }else if(json.type==='chat') {
+    c = c + '<i>from <b>' + json.data.from + '</b></i>:' +
+      json.data.message;
+  } else {
+    c = c + '<b>' + json.type +'</b>: ' +json.data;
   }
+  ele.innerHTML = c;
+  msgContainer.appendChild(ele);
+}
 
-  var name = nameEle.value;
-  var toName = toEle.value;
+sendButton.on('click', (e) => {
+
+  var toName = toEle.value.trim();
   var msg = msgEle.value;
-  if(name.trim()==='' || toName.trim()==='') {
-    console.log('username or to name could not be empty');
+  if(toName==='') {
+    var toast = ToastController.toast({message: 'receiver\'s name can not be empty!'});
+    toast.present();
     return;
   }
-  ws.send(JSON.stringify({type: 'chat',
-                          payload: {from: name, to: toName, message: msg}}));
+  send({type: 'chat',
+        payload: {from: username, to: toName, message: msg}});
+  msgEle.value = '';
+  msgEle.focus();
   addMessage({type:'me', data: msg});
 
 });
