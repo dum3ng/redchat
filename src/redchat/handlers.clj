@@ -14,7 +14,7 @@
 (defroutes root
   (GET "/" []  {:status 200
                 :headers {"Content-Type" "text/html"}
-                :body (str (slurp (io/resource "public/index.html")))})
+                :body (slurp (io/resource "public/index.html"))})
   (GET "/about"  [] {:status 200
                      :headers {}
                      :body "about !"})
@@ -103,3 +103,8 @@
              (wrap-resource "public")
              wrap-content-type
              wrap-not-modified))
+(defn heroku
+  [request]
+  {:status 200
+   :headers {}
+   :body "hello heroku!"})
