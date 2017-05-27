@@ -24,7 +24,8 @@ ToastController.toast = (msg)=>{
 // ---------- WebSocket ----------
 var ws;
 var createConn = () => {
-  var url = 'ws://' + window.location.host + '/ws';
+  var schema = window.location.protocol === 'http:' ? 'wss://' : 'ws://';
+  var url = schema + window.location.host + '/ws';
   ws = new WebSocket(url);
   ws.onopen = () => {
     console.log('client: ws connected.');
