@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/uberjar/redchat-standalone.jar clojure.main -m redchat.core
+web: java $JVM_OPTS -jar target/uberjar/redchat-standalone.jar host 0.0.0.0 port $PORT
