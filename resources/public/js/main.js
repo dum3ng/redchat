@@ -2,6 +2,10 @@ var $ = (q) => document.querySelector(q);
 HTMLElement.prototype.on = HTMLElement.prototype.addEventListener;
 
 var username;
+var modal = $('.modal');
+var nameEle = $('.username');
+var nameCommit = $('.name-commit');
+var nameDisplay = $('.name-display');
 //-------------ToastController----------------
 var ToastController = {};
 var container = $('.toast-container');
@@ -33,8 +37,15 @@ var createConn = () => {
   ws.onmessage = (e) => {
     var json = JSON.parse(e.data);
     if(json.type === 'join'){
-      var toast = ToastController.toast({message: json.data.message});
-      toast.present();
+      if(json.data.message === 'ok'){
+        modal.classList.add('hidden');
+        nameDisplay.innerText = username;
+        toEle.focus();
+      }else {
+        var toast = ToastController.toast({message: json.data.message});
+        toast.present();
+
+      }
       return;
     }
     addMessage(json);
@@ -61,21 +72,19 @@ function send(m) {
   ws.send(JSON.stringify(m));
 }
 // -------------Modal------------
-var modal = $('.modal');
-var nameEle = $('.username');
-var nameCommit = $('.name-commit');
-var nameDisplay = $('.name-display');
+
 nameEle.focus();
 
 
 function join(name) {
-  nameDisplay.innerText = name;
+
   send({type: 'join',
               payload: {username: name}}) ;
 };
 
 var toEle = $('input[name="to"]');
 var msgEle = $('input[name="message"]');
+
 nameCommit.on('click', (e) => {
   username = nameEle.value.trim();
   if(!username){
@@ -83,37 +92,43 @@ nameCommit.on('click', (e) => {
     toast.present();
     return;
   }
-  modal.classList.add('hidden');
+
   join(username);
-  toEle.focus();
+
 });
+
+// ------------------------------
 toEle.on('keydown', (e) => {
   if(e.key === 'Enter') {
     msgEle.focus();
   }
 });
-// ------------------------------
+
 var sendButton = $('#send');
 var msgContainer = $('.messages');
 
 function addMessage(json) {
   var ele = document.createElement('div');
   var c = '';
+  console.log(json);
   switch(json.type){
   case 'error':
-    c = '<b>' + json.type +'</b>: ' +json.data.message;
+    c = '<b>' + json.type +'</b>: ' +json.payload.message;
     break;
   case 'chat':  // from other
     c =  '<div class="chat chat-other"><div class="chat-item">'+
-      '<div class="chat-title">'+ json.data.from+
-      '</div><div class="bubble bubble-other">' + json.data.message+
+      '<div class="chat-title">'+ json.payload.from+
+      '</div><div class="bubble bubble-other">' + json.payload.message+
     '</div></div></div>';
 
+    break;
+  case 'server':
+    c =  '<b>' + json.type +'</b>: ' +json.payload.message;
     break;
   case 'me':
         c =  '<div class="chat chat-self"><div class="chat-item">'+
       '<div class="chat-title">'+ 'Me'+
-      '</div><div class="bubble bubble-self">' + json.data+
+      '</div><div class="bubble bubble-self">' + json.payload.message+
     '</div></div></div>';
 
     break;
@@ -142,7 +157,7 @@ function submit(){
         payload: {from: username, to: toName, message: msg}});
   msgEle.value = '';
   msgEle.focus();
-  addMessage({type:'me', data: msg});
+  addMessage({type:'me', payload: {message: msg}});
 }
 
 msgEle.on('keydown', (e) => {

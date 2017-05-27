@@ -36,12 +36,14 @@
   #_ "data is {:type \"join\" :payload {:username <name>}}"
   [ch data]
   (let [name  (-> data :payload :username)]
-    (if ((keys @channels) name)
+    (if (some #(= % name) (keys @channels))
       (send-message ch {:type "join"
                         :data {:message "User exists. Try another"}})
       (do
         (info :join (format "%s has joined." name))
-        (swap! channels assoc  name ch))))
+        (swap! channels assoc  name ch)
+        (send-message ch {:type "join"
+                          :data {:message "ok"}}))))
   )
 
 
@@ -54,11 +56,11 @@
         to-ch (@channels to)]
     (if to-ch
       (send-message to-ch {:type "chat"
-                           :data {:from from
-                                  :message message}})
+                           :payload {:from from
+                                     :message message}})
       #_ (error (format "user %s not onlin." to))
       (send-message  (@channels from) {:type "error"
-                                       :data {:message (format "user %s now NOT online." to)}}))))
+                                       :payload {:message (format "user %s now NOT online." to)}}))))
 
 (defn close-handler
   [ch _]
@@ -69,7 +71,7 @@
       (swap! channels dissoc name))))
 
 (def ws {:on-open (fn [ch] (send-message ch {:type "server"
-                                            :data "connected."}))
+                                            :payload {:message "connected."}}))
          :on-close close-handler
          :on-message (fn [ch msg]
                        (let [data (try (json/read-str msg :key-fn keyword)

@@ -15,7 +15,7 @@
 (defn -main
   [& {:as args}]
   ;;  (info "port is " (env :port))
-  (let [host (args "host")
+  (let [host (or (args "host") "0.0.0.0")
         port (Integer. (or (args "port") (env :port) 5000))]
     (s/run h/app {:port port
                   :host host})))
